@@ -1,24 +1,27 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
-	"project/middleware"
+	"project/config"
+	"project/loginJWT"
 	"project/models"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
-// Get All User
-func GetUsersController(c echo.Context) error {
-	var users []models.User
+// Get All Order
+func GetOrdersController(c echo.Context) error {
+	var orders []models.Order
 
-	if err := DB.Find(&users).Error; err != nil {
+	if err := config.DB.Find(&orders).Error; err != nil {
+		fmt.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success get all users",
-		"users":   users,
+		"message": "success get all orders",
+		"orders":  orders,
 	})
 }
 
@@ -35,12 +38,13 @@ func CreateSeatController(c echo.Context) error {
 	seat := models.Seat{}
 	c.Bind(&seat)
 
-	if err := DB.Save(&seat).Error; err != nil {
+	if err := config.DB.Save(&seat).Error; err != nil {
+		fmt.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success create new seat",
-		"user":    seat,
+		"seat":    seat,
 	})
 }
 
@@ -49,12 +53,12 @@ func CreateAdminController(c echo.Context) error {
 	admin := models.Admin{}
 	c.Bind(&admin)
 
-	if err := DB.Save(&admin).Error; err != nil {
+	if err := config.DB.Save(&admin).Error; err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success create new account",
-		"user":    admin,
+		"admin":   admin,
 	})
 }
 
@@ -63,14 +67,14 @@ func LoginAdminController(c echo.Context) error {
 	loginAdmin := models.Admin{}
 	c.Bind(&loginAdmin)
 
-	if err := DB.Where("username = ? AND password = ?", loginAdmin.Username, loginAdmin.Password).First(&loginAdmin).Error; err != nil {
+	if err := config.DB.Where("username = ? AND password = ?", loginAdmin.Username, loginAdmin.Password).First(&loginAdmin).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "fail login",
 			"error":   err.Error(),
 		})
 	}
 
-	token, err := middleware.CreateToken(loginAdmin.Username, loginAdmin.Name)
+	token, err := loginJWT.CreateJwtToken(loginAdmin.Username)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -79,10 +83,8 @@ func LoginAdminController(c echo.Context) error {
 		})
 	}
 
-	userResponse := models.UserResponse{loginAdmin.Model, loginAdmin.Name, loginAdmin.Username, token}
-
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success login",
-		"user":    userResponse,
+		"token":   token,
 	})
 }

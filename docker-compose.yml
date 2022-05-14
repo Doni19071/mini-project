@@ -1,0 +1,33 @@
+services:
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 8808:8808
+    environment:
+      - APP_DB_CONNECTION_STRING=root:nokia123@tcp(localhost:3306)/miniProject?charset=utf8mb4&parseTime=True&loc=Local
+      - APP_PORT=8808
+
+  db:
+    image: bitnami/mysql
+    # selalu restart container ini, kecuali container nya di stop
+    restart: unless-stopped
+    ports:
+      - 3301:3302
+    environment:
+      - MYSQL_ROOT_PASSWORD=nokia123
+      - MYSQL_DATABASE=miniProject
+    healthcheck:
+      # perintah untuk memastikan bahwa mysql sudah ready
+      test: ["CMD", "mysql", "-u", "root",  "-pnokia123", "-e", "show schemas"]
+      interval: 10s 
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports: # host:container
+      - 8088:8808

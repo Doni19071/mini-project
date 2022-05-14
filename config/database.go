@@ -32,7 +32,7 @@ func InitDB() {
 		DB_Password: "nokia123",
 		DB_Port:     "3306",
 		DB_Host:     "localhost",
-		DB_Name:     "mini_project",
+		DB_Name:     "miniProject",
 	}
 
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
@@ -51,7 +51,6 @@ func InitDB() {
 }
 
 func InitialMigration() {
-	DB.AutoMigrate(&models.User{})
 	DB.AutoMigrate(&models.Seat{})
 	DB.AutoMigrate(&models.Order{})
 	DB.AutoMigrate(&models.Admin{})
