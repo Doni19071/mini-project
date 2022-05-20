@@ -2,9 +2,9 @@ services:
 
   appDb:
     image: bitnami/mysql
-    restart: always
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_ROOT_PASSWORD: nokia123
       MYSQL_DATABASE: miniProject
     ports: 
       - 3306:3306
@@ -16,7 +16,7 @@ services:
 
   app:
     build: .
-    restart: always
+    restart: unless-stopped
     depends_on:
       appDb:
         condition: service_healthy
@@ -29,6 +29,6 @@ services:
 
   adminer:
     image: adminer
-    restart: always
+    restart: unless-stopped
     ports: # host:container
       - 8881:8880
