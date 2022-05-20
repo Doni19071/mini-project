@@ -5,13 +5,13 @@ on:
     branches:
       - master
     # # Hanya men-trigger action jika ada perubahan di folder /controller
-    # paths:
-    #   - appController/**
+    paths:
+      - appController/**
 
 jobs:
 
   deploy-to-ec2:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu 20
     steps:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
