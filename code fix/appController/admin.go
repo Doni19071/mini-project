@@ -81,5 +81,4 @@ func (pc AdminController) EditAdmin(c echo.Context) error {
 	return c.JSON(http.StatusOK, admin)
 }
 
-//coba edit
-//lagi
+//COBA CI CD EDIT CONTROLLER
