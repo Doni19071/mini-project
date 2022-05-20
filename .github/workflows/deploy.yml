@@ -21,8 +21,8 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          cd ~/mini-project
-          git pull origin master
+          cd mini-project
+          git pull origin main
           cd 'fix code'
           docker-compose down
           docker-compose up --build -d
