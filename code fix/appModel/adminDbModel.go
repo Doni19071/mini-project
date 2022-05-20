@@ -33,7 +33,7 @@ func (pm *AdminDBModel) EditAdmin(id int, newP Admin) (Admin, error) {
 	if err != nil {
 		return p, err
 	}
-	p.Usernameame = newP.Usernameame
+	p.Username = newP.Username
 	p.Password = newP.Password
 	p.Token = newP.Token
 	// "update person set ... where id=?", id
